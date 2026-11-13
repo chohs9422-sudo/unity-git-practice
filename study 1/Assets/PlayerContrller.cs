@@ -1,50 +1,39 @@
 using UnityEngine;
+
 public class PlayerMove : MonoBehaviour
 {
-   
-    public float speed = 0.1f;
+    public float speed = 5f;          // 이동 속도 (Time.deltaTime 적용 기준 5 정도가 적당)
     public GameObject BulletPrefab;   
-    public float BulletSpeed;
+    public float BulletSpeed = 500f;  // 총알 발사 힘
 
     void Update()
     {
-       
+
         if (Input.GetKey(KeyCode.W))
         {
-            transform.Translate(0, speed, 0);
+            transform.Translate(0, speed * Time.deltaTime, 0);
         }
 
-      
         if (Input.GetKey(KeyCode.S))
         {
-            transform.Translate(0, -speed, 0);
+            transform.Translate(0, -speed * Time.deltaTime, 0);
         }
 
-  
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Translate(-speed, 0, 0);
+            transform.Translate(-speed * Time.deltaTime, 0, 0);
         }
 
-  
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Translate(speed, 0, 0);
+            transform.Translate(speed * Time.deltaTime, 0, 0);
         }
         
+        // 2. 발사 (스페이스바를 누를 때마다 1발 발사)
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int i = 0; i < 3; i++) // 3발 발사[cite: 10, 11]
-            {
-                // 총알 생성 및 위치 설정[cite: 7, 11]
-                GameObject Bullet = Instantiate(BulletPrefab);
-                Vector3 bulletPos = transform.position;
-                bulletPos.y += 0.3f * i; // 총알 간격 미세 조정[cite: 11]
-                Bullet.transform.position = bulletPos;
-
-                // 총알에 물리 힘(AddForce)을 주어 위로 발사[cite: 8, 11]
-                Bullet.GetComponent<Rigidbody2D>().AddForce(Vector2.up * BulletSpeed);
-            }
+            GameObject Bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
+            Bullet.GetComponent<Rigidbody2D>().AddForce(Vector2.up * BulletSpeed);
         }
     }
 }
